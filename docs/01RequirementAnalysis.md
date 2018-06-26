@@ -13,10 +13,13 @@
 ### 用户角色描述
 
 
-## 二、总体流程（产品结构图、用例图、流程图、状态图等）
+## 二、总体流程（产品结构图、用例图）
 
 产品结构图：
-<img src="https://raw.githubusercontent.com/CodeMonkeyJeffGT/hotel/master/docs/imgs/%E5%AE%BE%E9%A6%86%E9%A2%84%E8%AE%A2%E7%B3%BB%E7%BB%9F.png" />
+<img src="https://raw.githubusercontent.com/CodeMonkeyJeffGT/hotel/master/docs/imgs/%E7%BB%93%E6%9E%84%E5%9B%BE.png" />
+
+用例图：
+<img src="https://raw.githubusercontent.com/CodeMonkeyJeffGT/hotel/master/docs/imgs/%E7%94%A8%E4%BE%8B%E5%9B%BE.png" />
 
 ### 功能摘要（简要功能规格说明表）
 
