@@ -15,6 +15,9 @@
 
 ## 二、总体流程（产品结构图、用例图、流程图、状态图等）
 
+产品结构图：
+<img src="https://raw.githubusercontent.com/CodeMonkeyJeffGT/hotel/master/docs/imgs/%E5%AE%BE%E9%A6%86%E9%A2%84%E8%AE%A2%E7%B3%BB%E7%BB%9F.png" />
+
 ### 功能摘要（简要功能规格说明表）
 
 ### 约束和假定
