@@ -16,10 +16,10 @@
 ## 二、总体流程（产品结构图、用例图）
 
 产品结构图：
-<img src="https://raw.githubusercontent.com/CodeMonkeyJeffGT/hotel/master/docs/imgs/%E7%BB%93%E6%9E%84%E5%9B%BE.png" />
+<img src="https://raw.githubusercontent.com/CodeMonkeyJeffGT/hotel/master/docs/imgs/%E7%BB%93%E6%9E%84.png" />
 
 用例图：
-<img src="https://raw.githubusercontent.com/CodeMonkeyJeffGT/hotel/master/docs/imgs/%E7%94%A8%E4%BE%8B%E5%9B%BE.png" />
+<img src="https://raw.githubusercontent.com/CodeMonkeyJeffGT/hotel/master/docs/imgs/%E7%94%A8%E4%BE%8B.png" />
 
 ### 功能摘要（简要功能规格说明表）
 
