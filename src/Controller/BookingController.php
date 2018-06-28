@@ -8,10 +8,10 @@ use App\Entity\Booking;
 
 class BookingController extends Controller
 {
-    public const ROOM_NOT_EXISTS = 1000;
-    public const BOOKED = 1001;
-    public const CHECKED = 1002;
-    public const ROOM_NOT_YOURS = 1003;
+    public const ROOM_NOT_EXISTS = 2000;
+    public const BOOKED = 2001;
+    public const CHECKED = 2002;
+    public const ROOM_NOT_YOURS = 2003;
 
     public function __constuct()
     {

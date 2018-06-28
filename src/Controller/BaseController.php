@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use App\Entity\User;
 
 /**
  * 基础类，提供基本方法
@@ -21,14 +22,17 @@ abstract class BaseController extends Controller
     protected $request;
     protected $session;
 
-    public const OK         = 0;
-    public const REDIRECT   = 302;
-    public const TO_SIGN    = 403;
-    public const ERROR      = 500;
+    public const OK = 0;
+    public const TO_SIGN = 1;
+    public const ERROR = 2;
+    public const FORBIDEN = 3;
+    public const PARAM_MISS = 4;
+    public const INVALID_ARGUMENT = 5;
+    public const REDIRECT = 6;
 
-    public const PER_USER           = 0;
-    public const PER_RECEPTIONIST   = 1;
-    public const PER_ADMIN          = 2;
+    public const PER_USER = 0;
+    public const PER_RECEPTIONIST = 1;
+    public const PER_ADMIN = 2;
 
     private $errMsg = array();
     
@@ -54,11 +58,12 @@ abstract class BaseController extends Controller
         if ($permit === self::PER_USER) {
             return true;
         }
+        $id = $this->session->get('hotelUser');
         $userDb = $this->getDoctrine()->getRepository(User::class);
-        if ($userDb->checkPermit($permit)) {
+        if ($userDb->checkPermit($id, $permit)) {
             return true;
         } else {
-            return $this->error(static::ERROR, '很抱歉，您没有权限这么做');
+            return $this->error(static::FORBIDEN);
         }
     }
 
@@ -70,10 +75,13 @@ abstract class BaseController extends Controller
     protected function setErrMsg($errMsg = array())
     {
         $this->errMsg = array(
-            static::OK         => 'OK',
-            static::REDIRECT   => '自动跳转中，请稍候',
-            static::TO_SIGN    => '请登录',
-            static::ERROR      => '出错了',
+            static::OK => 'OK',
+            static::TO_SIGN => '请登录',
+            static::ERROR => '出错了',
+            static::FORBIDEN => '您没有权限这么做',
+            static::PARAM_MISS => '参数缺失',
+            static::INVALID_ARGUMENT => '参数不合法',
+            static::REDIRECT => '自动跳转中，请稍候',
         ) + $this->errMsg + $errMsg;
     }
 

@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use App\Controller\UserController;
 
 /**
  * @method User|null find($id, $lockMode = null, $lockVersion = null)
@@ -28,7 +29,18 @@ class UserRepository extends ServiceEntityRepository
      */
     public function sign($account, $password): int
     {
-
+        $user = $this->createQueryBuilder('u')
+            ->andWhere('u.account = :account')
+            ->setParameter('account', $account)
+            ->getQuery()
+            ->getOneOrNullResult();
+        if (is_null($user)) {
+            throw new \Exception('账号不存在', UserController::USER_NOT_EXISTS);
+        }
+        if ($user->getPassword() !== $password) {
+            throw new \Exception('密码错误', UserController::PASSWORD_WRONG);
+        }
+        return $user->getId();
     }
 
     /**
@@ -41,7 +53,78 @@ class UserRepository extends ServiceEntityRepository
      */
     public function register($account, $password, $nickname): int
     {
+        $user = $this->createQueryBuilder('u')
+            ->andWhere('u.account = :account')
+            ->setParameter('account', $account)
+            ->getQuery()
+            ->getOneOrNullResult();
+        if ( ! is_null($user)) {
+            throw new \Exception('', UserController::USER_EXISTS);
+        }
 
+        $user = new User();
+        $user->setAccount($account);
+        $user->setPassword($password);
+        $user->setNickname($nickname);
+        $user->setRole(UserController::PER_USER);
+        $entityManager = $this->getEntityManager();
+        $entityManager->persist($user);
+        $entityManager->flush();
+        return $user->getId();
+    }
+
+    /**
+     * 检查权限
+     * @param int $id       用户id
+     * @param int $permit   权限等级
+     * 
+     * @return boolean
+     */
+    public function checkPermit($id, $permit): bool
+    {
+        $user = $this->createQueryBuilder('u')
+            ->andWhere('u.id = :id')
+            ->andWhere('u.role >= :permit')
+            ->setParameter('permit', $permit)
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
+        return ( ! is_null($user));
+    }
+
+    /**
+     * 获取用户列表
+     */
+    public function list()
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = 'SELECT `u`.`id`, `u`.`nickname`, `u`.`account`, `u`.`role`
+            FROM `user` `u`';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    /**
+     * 修改用户角色
+     * @param int $userId 用户id
+     * @param int $permit 权限
+     */
+    public function changePermit($userId, $permit): void
+    {
+        $user = $this->createQueryBuilder('u')
+            ->andWhere('u.id = :id')
+            ->setParameter('id', $userId)
+            ->getQuery()
+            ->getOneOrNullResult();
+        if (is_null($user)) {
+            throw new \Exception('', UserController::USER_NOT_FOUND);
+        }
+        $user->setRole($permit);
+        $entityManager = $this->getEntityManager();
+        $entityManager->persist($user);
+        $entityManager->flush();
+        return;
     }
 
 //    /**
