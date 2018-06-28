@@ -1,3 +1,22 @@
-#index:
-#    path: /
-#    controller: App\Controller\DefaultController::index
+page-admin-index:
+   path: /admin/index
+   controller: App\Controller\Page\AdminController::index
+page-admin-in:
+   path: /admin/in
+   controller: App\Controller\Page\AdminController::in
+page-admin-out:
+   path: /admin/out
+   controller: App\Controller\Page\AdminController::out
+page-admin-order:
+   path: /admin/order
+   controller: App\Controller\Page\AdminController::order
+page-admin-room:
+   path: /admin/room
+   controller: App\Controller\Page\AdminController::room
+page-admin-receptionist:
+   path: /admin/receptionist
+   controller: App\Controller\Page\AdminController::receptionist
+page-admin-people:
+   path: /admin/people
+   controller: App\Controller\Page\AdminController::people
+

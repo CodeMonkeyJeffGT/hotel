@@ -19,6 +19,70 @@ class OccupancyRepository extends ServiceEntityRepository
         parent::__construct($registry, Occupancy::class);
     }
 
+    /**
+     * 开房登记
+     * @param int $userId 用户id
+     * @param int $roomId 房间id
+     * 
+     * @return int 登记id
+     */
+    public function checkIn($userId, $roomId): int
+    {
+
+    }
+
+    /**
+     * 退房结账
+     * @param int $userId 用户id
+     * @param int $roomId 房间id
+     * 
+     * @return int 登记id
+     */
+    public function checkOut($userId, $roomId): int
+    {
+
+    }
+
+    /**
+     * 开房统计
+     * 
+     * @return int 预订数量
+     */
+    public function countIn(): int
+    {
+        
+    }
+
+    /**
+     * 退房统计
+     * 
+     * @return int 预订数量
+     */
+    public function countOut(): int
+    {
+        
+    }
+
+    /**
+     * 开房信息详情
+     * 
+     * @return array 预订信息详情
+     */
+    public function listIn(): array
+    {
+        
+    }
+
+    /**
+     * 退房信息详情
+     * 
+     * @return array 预订信息详情
+     */
+    public function listOut(): array
+    {
+        
+    }
+
 //    /**
 //     * @return Occupancy[] Returns an array of Occupancy objects
 //     */

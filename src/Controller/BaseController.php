@@ -5,17 +5,18 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * 基础类，提供基本方法
- * @method Response success($data = null, string $message = null, $code = null)
- * @method Response error($code = null, string $message = null, $data = null)
- * @method Response toSign(string $message = null, $data = null, $code = null)
- * @method Response toUrl(string $message = null, $data = null, $code = null)
- * @method Response return($data = null, string $message = null, $code = null)
+ * @method JsonResponse success($data = null, string $message = null, $code = null)
+ * @method JsonResponse error($code = null, string $message = null, $data = null)
+ * @method JsonResponse toSign(string $message = null, $data = null, $code = null)
+ * @method JsonResponse toUrl(string $message = null, $data = null, $code = null)
+ * @method JsonResponse return($data = null, string $message = null, $code = null)
  */
-class BaseController extends Controller
+abstract class BaseController extends Controller
 {
     protected $request;
     protected $session;
@@ -25,7 +26,11 @@ class BaseController extends Controller
     public const TO_SIGN    = 403;
     public const ERROR      = 500;
 
-    private $errMsg;
+    public const PER_USER           = 0;
+    public const PER_RECEPTIONIST   = 1;
+    public const PER_ADMIN          = 2;
+
+    private $errMsg = array();
     
     /**
      * 设置 request 和 session
@@ -35,6 +40,26 @@ class BaseController extends Controller
         $this->request = Request::createFromGlobals();
         $this->session = new Session();
         $this->setErrMsg();
+    }
+
+    /**
+     * 检查是否登录及是否有权限
+     */
+    public function checkPermit($permit = null)
+    {
+        $permit = $permit ?? self::PER_USER;
+        if ( ! $this->session->has('hotelUser')) {
+            return $this->toSign();
+        }
+        if ($permit === self::PER_USER) {
+            return true;
+        }
+        $userDb = $this->getDoctrine()->getRepository(User::class);
+        if ($userDb->checkPermit($permit)) {
+            return true;
+        } else {
+            return $this->error(static::ERROR, '很抱歉，您没有权限这么做');
+        }
     }
 
     /**
@@ -49,7 +74,7 @@ class BaseController extends Controller
             static::REDIRECT   => '自动跳转中，请稍候',
             static::TO_SIGN    => '请登录',
             static::ERROR      => '出错了',
-        ) + $errMsg;
+        ) + $this->errMsg + $errMsg;
     }
 
     /**
@@ -58,9 +83,9 @@ class BaseController extends Controller
      * @param string        $message    提示信息
      * @param mixed         $code       返回类型代码
      * 
-     * @return Response
+     * @return JsonResponse
      */
-    protected function success($data = null, string $message = null, $code = null): Response
+    protected function success($data = null, string $message = null, $code = null): JsonResponse
     {
         return $this->return($data, $code, $message);
     }
@@ -71,9 +96,9 @@ class BaseController extends Controller
      * @param mixed         $code       返回类型代码
      * @param mixed         $data       返回数据
      * 
-     * @return Response
+     * @return JsonResponse
      */
-    protected function error($code = null, string $message = null, $data = null): Response
+    protected function error($code = null, string $message = null, $data = null): JsonResponse
     {
         $code = $code ?? static::ERROR;
         return $this->return($data, $code, $message);
@@ -85,9 +110,9 @@ class BaseController extends Controller
      * @param mixed         $data       返回数据
      * @param mixed         $code       返回类型代码
      * 
-     * @return Response
+     * @return JsonResponse
      */
-    protected function toSign(string $message = null, $data = null, $code = null): Response
+    protected function toSign(string $message = null, $data = null, $code = null): JsonResponse
     {
         $code = $code ?? static::TO_SIGN;
         return $this->return($data, $code, $message);
@@ -99,9 +124,9 @@ class BaseController extends Controller
      * @param mixed         $data       返回数据        array('url' => $url);
      * @param mixed         $code       返回类型代码
      * 
-     * @return Response
+     * @return JsonResponse
      */
-    protected function toUrl(string $message = null, $data = null, $code = null): Response
+    protected function toUrl(string $message = null, $data = null, $code = null): JsonResponse
     {
         $code = $code ?? static::REDIRECT;
         return $this->return($data, $code, $message);
@@ -113,9 +138,9 @@ class BaseController extends Controller
      * @param mixed         $code       返回类型代码
      * @param string        $message    提示信息
      * 
-     * @return Response
+     * @return JsonResponse
      */
-    protected function return($data = null, $code = null, string $message = null): Response
+    protected function return($data = null, $code = null, string $message = null): JsonResponse
     {
         $code    = $code ?? static::OK;
         $message = $message ?? $this->errMsg[$code];

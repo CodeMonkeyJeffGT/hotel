@@ -19,6 +19,31 @@ class UserRepository extends ServiceEntityRepository
         parent::__construct($registry, User::class);
     }
 
+    /**
+     * 登录
+     * @param string $account 账号
+     * @param string $password 密码
+     * 
+     * @return int 用户id
+     */
+    public function sign($account, $password): int
+    {
+
+    }
+
+    /**
+     * 注册
+     * @param string $account 账号
+     * @param string $password 密码
+     * @param string $nickname 昵称
+     * 
+     * @return int 用户id
+     */
+    public function register($account, $password, $nickname): int
+    {
+
+    }
+
 //    /**
 //     * @return User[] Returns an array of User objects
 //     */

@@ -19,6 +19,50 @@ class BookingRepository extends ServiceEntityRepository
         parent::__construct($registry, Booking::class);
     }
 
+    /**
+     * 预订房间
+     * @param int $userId 用户id
+     * @param int $roomId 房间id
+     * 
+     * @return int 预订id
+     */
+    public function book($userId, $roomId): int
+    {
+
+    }
+
+    /**
+     * 取消预订
+     * @param int $userId 用户id
+     * @param int $roomId 房间id
+     * 
+     * @return int 预订id
+     */
+    public function unBook(): int
+    {
+        
+    }
+
+    /**
+     * 预订统计
+     * 
+     * @return int 预订数量
+     */
+    public function countBook(): int
+    {
+        
+    }
+
+    /**
+     * 预订信息详情
+     * 
+     * @return array 预订信息详情
+     */
+    public function listBook(): array
+    {
+        
+    }
+
 //    /**
 //     * @return Booking[] Returns an array of Booking objects
 //     */
