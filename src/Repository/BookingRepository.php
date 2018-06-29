@@ -5,6 +5,8 @@ namespace App\Repository;
 use App\Entity\Booking;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use App\Controller\BookingController;
+use App\Controller\OccupancyController;
 
 /**
  * @method Booking|null find($id, $lockMode = null, $lockVersion = null)
@@ -26,9 +28,45 @@ class BookingRepository extends ServiceEntityRepository
      * 
      * @return int 预订id
      */
-    public function book($userId, $roomId): int
+    public function book($userId, $roomId, $bookDate, $days): int
     {
-
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = 'SELECT `r`.`id` `id`,
+            `o`.`status` `os`, `o`.`bookDate` `bookDate`, `o`.`days` `bookDays`,
+            `b`.`status` `bs`, `b`.`in_date` `checkDate`, `b`.`days` `checkDays`
+            FROM `room` `r`
+            LEFT JOIN `occupancy` `o` ON `o`.`r_id` = `r`.`id`
+            LEFT JOIN `booking` `b` ON `b`.`r_id` = `r`.`id`
+            WHERE `r`.`id` = :id
+            AND `o`.`status` = :os
+            AND `b`.`status` = :bs';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(array(
+            'id' => $roomId,
+            'os' => OccupancyController::STATUS_IN,
+            'bs' => BookingController::STATUS_BOOKED,
+        ));
+        $rst = $stmt->fetchAll();
+        if (count($rst) === 0) {
+            throw new \Exception('', BookingController::ROOM_NOT_EXISTS);
+        }
+        foreach ($rst as $line) {
+            if ($line['os'] === 1) {
+                // if (strtotime($line['checkDate']) + $line['checkDays'] * 86400 <  )
+                throw new \Exception('', BookingController::CHECKED);
+            }
+            if ($line['bs'] === 1) {
+                throw new \Exception('', BookingController::BOOKED);
+            }
+        }
+        $booking = new Booking();
+        $booking->setUId($userId);
+        $booking->setRId($roomId);
+        $booking->setStatus(BookingController::STATUS_BOOKED);
+        $entityManager = $this->getEntityManager();
+        $entityManager->persist($booking);
+        $entityManager->flush();
+        return $booking->getId();
     }
 
     /**
@@ -38,9 +76,30 @@ class BookingRepository extends ServiceEntityRepository
      * 
      * @return int 预订id
      */
-    public function unBook(): int
+    public function unBook($userId, $bookingId): int
     {
-        
+        $booking = $this->createQueryBuilder('b')
+            ->andWhere('b.id = :id')
+            ->setParameter('id', $bookingId)
+            ->getQuery()
+            ->getOneOrNullResult();
+        if (is_null($booking)) {
+            throw new \Exception('', BookingController::BOOKING_NOT_EXISTS);
+        }
+        if ($booking->getUId() !== (int)$userId) {
+            throw new \Exception('', BookingController::ROOM_NOT_YOURS);
+        }
+        switch ($bookint->getStatus()) {
+            case BookingController::STATUS_CANCELED:
+                throw new \Exception('', BookingController::ALREADY_CANCELED);
+            case BookingController::STATUS_DONE:
+                throw new \Exception('', BookingController::ALREADY_DONE);
+        }
+        $booking->setStatus(BookingController::STATUS_CANCELED);
+        $entityManager = $this->getEntityManager();
+        $entityManager->persist($booking);
+        $entityManager->flush();
+        return $bookingId;
     }
 
     /**

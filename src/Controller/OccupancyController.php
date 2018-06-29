@@ -8,6 +8,9 @@ use App\Entity\Occupancy;
 
 class OccupancyController extends Controller
 {
+    public const STATUS_IN = 1;
+    public const STATUS_OUT = 2;
+
     /**
      * 开房登记
      * 

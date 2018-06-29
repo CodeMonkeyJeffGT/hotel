@@ -8,10 +8,17 @@ use App\Entity\Booking;
 
 class BookingController extends Controller
 {
-    public const ROOM_NOT_EXISTS = 2000;
-    public const BOOKED = 2001;
-    public const CHECKED = 2002;
-    public const ROOM_NOT_YOURS = 2003;
+    public const STATUS_BOOKED = 1;
+    public const STATUS_CANCELED = 2;
+    public const STATUS_DONE = 3;
+
+    public const ROOM_NOT_EXISTS = 3000;
+    public const BOOKED = 3001;
+    public const CHECKED = 3002;
+    public const ROOM_NOT_YOURS = 3003;
+    public const BOOKING_NOT_YOURS = 3004;
+    public const ALREADY_CANCELED = 3005;
+    public const ALREADY_DONE = 3006;
 
     public function __constuct()
     {
@@ -21,6 +28,9 @@ class BookingController extends Controller
             static::BOOKED => '此房间已被预订',
             static::CHECKED => '此房间已有其他顾客',
             static::ROOM_NOT_YOURS => '您没有权限操作这个房间',
+            static::BOOKING_NOT_YOURS => '订单不存在',
+            static::ALREADY_CANCELED => '该预订已被取消',
+            static::ALREADY_DONE => '已入住，无法取消',
         ));
     }
 
@@ -36,9 +46,15 @@ class BookingController extends Controller
         }
         $userId = $this->session->get('hotelUser');
         $roomId = $this->request->request->get('roomId');
+        $bookDate = $this->request->request->get('bookDate');
+        $days = $this->request->request->get('days');
+        if (in_array(null, array($roomId, $bookDate, $days))) {
+            return $this->error(static::PARAM_MISS);
+        }
+
         $bookingDb = $this->getDoctrine()->getRepository(Booking::class);
         try {
-            $bookingRst = $bookingDb->book($userId, $roomId);
+            $bookingRst = $bookingDb->book($userId, $roomId, $bookDate, $days);
             return $this->success(array(
                 'id' => $bookingRst,
             ));
@@ -61,13 +77,11 @@ class BookingController extends Controller
             return $permitRst;
         }
         $userId = $this->session->get('hotelUser');
-        $roomId = $this->request->request->get('roomId');
+        $bookingId = $this->request->request->get('bookingId');
         $bookingDb = $this->getDoctrine()->getRepository(Booking::class);
         try {
-            $bookingRst = $bookingDb->unBook($userId, $roomId);
-            return $this->success(array(
-                'id' => $bookingRst,
-            ));
+            $bookingRst = $bookingDb->unBook($userId, $bookingId);
+            return $this->success();
         } catch (\Exception $e) {
             if ($e->getCode() === 0) {
                 return $this->error();

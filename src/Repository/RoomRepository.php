@@ -23,9 +23,9 @@ class RoomRepository extends ServiceEntityRepository
      * 房间列表
      * @return array 房间列表
      */
-    public function checkIn(): array
+    public function list(): array
     {
-        return $this->findBy(array(), array('num'));
+        return $this->findBy(array(), array('num' => 'ASC'));
     }
 
 //    /**
