@@ -37,14 +37,10 @@ class BookingRepository extends ServiceEntityRepository
             FROM `room` `r`
             LEFT JOIN `occupancy` `o` ON `o`.`r_id` = `r`.`id`
             LEFT JOIN `booking` `b` ON `b`.`r_id` = `r`.`id`
-            WHERE `r`.`id` = :id
-            AND (`o`.`status` IS NULL OR `o`.`status` = :os)
-            OR (`b`.`status` IS NULL OR `b`.`status` = :bs)';
+            WHERE `r`.`id` = :id';
         $stmt = $conn->prepare($sql);
         $stmt->execute(array(
             'id' => $roomId,
-            'os' => OccupancyController::STATUS_IN,
-            'bs' => BookingController::STATUS_BOOKED,
         ));
         $rst = $stmt->fetchAll();
         if (count($rst) === 0) {
