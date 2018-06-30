@@ -110,7 +110,7 @@ class OccupancyController extends Controller
             return $permitRst;
         }
         $occupancyDb = $this->getDoctrine()->getRepository(Occupancy::class);
-        $occupancyRst = $occupancyDb->countIn($userId, $roomId);
+        $occupancyRst = $occupancyDb->countIn();
         return $this->success($occupancyRst);
     }
 
@@ -125,7 +125,7 @@ class OccupancyController extends Controller
             return $permitRst;
         }
         $occupancyDb = $this->getDoctrine()->getRepository(Occupancy::class);
-        $occupancyRst = $occupancyDb->countOut($userId, $roomId);
+        $occupancyRst = $occupancyDb->countOut();
         return $this->success($occupancyRst);
     }
 
@@ -140,7 +140,7 @@ class OccupancyController extends Controller
             return $permitRst;
         }
         $occupancyDb = $this->getDoctrine()->getRepository(Occupancy::class);
-        $occupancyRst = $occupancyDb->listIn($userId, $roomId);
+        $occupancyRst = $occupancyDb->listIn();
         return $this->success($occupancyRst);
     }
 
@@ -155,7 +155,7 @@ class OccupancyController extends Controller
             return $permitRst;
         }
         $occupancyDb = $this->getDoctrine()->getRepository(Occupancy::class);
-        $occupancyRst = $occupancyDb->listOut($userId, $roomId);
+        $occupancyRst = $occupancyDb->listOut();
         return $this->success($occupancyRst);
     }
 }

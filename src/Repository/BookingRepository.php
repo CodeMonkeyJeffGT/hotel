@@ -108,7 +108,7 @@ class BookingRepository extends ServiceEntityRepository
      */
     public function countBook(): int
     {
-        
+        return count($this->findAll());
     }
 
     /**

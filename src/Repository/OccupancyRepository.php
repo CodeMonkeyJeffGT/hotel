@@ -103,7 +103,7 @@ class OccupancyRepository extends ServiceEntityRepository
      */
     public function countIn(): int
     {
-        
+        return count($this->findAll());
     }
 
     /**
@@ -113,7 +113,9 @@ class OccupancyRepository extends ServiceEntityRepository
      */
     public function countOut(): int
     {
-        
+        return count($this->findBy(array(
+            'status' => '2',
+        )));
     }
 
     /**

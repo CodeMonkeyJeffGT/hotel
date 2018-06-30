@@ -36,15 +36,15 @@
                     <h1 class="page-header">统计信息</h1>
                     <div class="row placeholders">
                         <div class="col-xs-6 col-sm-4 placeholder">
-                            <img src="/img?num=123456" width="80" height="80" class="img-responsive" alt="Generic placeholder thumbnail">
+                            <img src="/img?num=loading" id="img-0" width="80" height="80" class="img-responsive" alt="Generic placeholder thumbnail">
                             <h4>预订总数</h4>
                         </div>
                         <div class="col-xs-6 col-sm-4 placeholder">
-                            <img src="/img?num=9385" width="80" height="80" class="img-responsive" alt="Generic placeholder thumbnail">
+                            <img src="/img?num=loading" id="img-1" width="80" height="80" class="img-responsive" alt="Generic placeholder thumbnail">
                             <h4>开房登记总数</h4>
                         </div>
                         <div class="col-xs-6 col-sm-4 placeholder">
-                            <img src="/img?num=235" width="80" height="80" class="img-responsive" alt="Generic placeholder thumbnail">
+                            <img src="/img?num=loading" id="img-2" width="80" height="80" class="img-responsive" alt="Generic placeholder thumbnail">
                             <h4>退房结账总数</h4>
                         </div>
                     </div>
@@ -54,6 +54,42 @@
         <script src="/package/Admin/jquery.min.js"></script>
         <script src="/package/Admin/bootstrap.min.js"></script>
         <script>
-        
+            $(function(){
+                $.ajax({
+                    'method': 'get',
+                    'content-type': 'json',
+                    'url': '/count/book',
+                    'success': function(result){
+                        if (result.code == 0) {
+                            $('#img-0').attr('src', '/img?num=' + result.data);
+                        }
+                    },
+                });
+            });
+            $(function(){
+                $.ajax({
+                    'method': 'get',
+                    'content-type': 'json',
+                    'url': '/count/in',
+                    'success': function(result){
+                        console.log(result.code);
+                        if (result.code == 0) {
+                            $('#img-1').attr('src', '/img?num=' + result.data);
+                        }
+                    },
+                });
+            });
+            $(function(){
+                $.ajax({
+                    'method': 'get',
+                    'content-type': 'json',
+                    'url': '/count/out',
+                    'success': function(result){
+                        if (result.code == 0) {
+                            $('#img-2').attr('src', '/img?num=' + result.data);
+                        }
+                    },
+                });
+            });
         </script>
 </html>

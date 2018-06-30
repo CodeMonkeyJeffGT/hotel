@@ -101,7 +101,7 @@ class BookingController extends Controller
             return $permitRst;
         }
         $bookingDb = $this->getDoctrine()->getRepository(Booking::class);
-        $bookingRst = $bookingDb->countBook($userId, $roomId);
+        $bookingRst = $bookingDb->countBook();
         return $this->success($bookingRst);
     }
 
@@ -116,7 +116,7 @@ class BookingController extends Controller
             return $permitRst;
         }
         $bookingDb = $this->getDoctrine()->getRepository(Booking::class);
-        $bookingRst = $bookingDb->listBook($userId, $roomId);
+        $bookingRst = $bookingDb->listBook();
         return $this->success($bookingRst);
     }
 }
