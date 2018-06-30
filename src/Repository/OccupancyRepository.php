@@ -62,6 +62,7 @@ class OccupancyRepository extends ServiceEntityRepository
         $sql = 'UPDATE `booking`
             SET `status` = ' . BookingController::STATUS_DONE . '
             WHERE `r_id` = :id
+            AND `status` = 1
         ';
         $stmt = $conn->prepare($sql);
         $stmt->execute(array(
