@@ -34,8 +34,7 @@ class OccupancyRepository extends ServiceEntityRepository
             `o`.`status` `os`, `o`.`in_date` `check_date`, `o`.`days` `bookDays`
             FROM `room` `r`
             LEFT JOIN `occupancy` `o` ON `o`.`r_id` = `r`.`id`
-            WHERE `r`.`id` = :id
-            AND (`o`.`status` IS NULL OR `o`.`status` = :os)';
+            WHERE `r`.`id` = :id';
         $stmt = $conn->prepare($sql);
         $stmt->execute(array(
             'id' => $roomId,
