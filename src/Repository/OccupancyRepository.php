@@ -37,8 +37,7 @@ class OccupancyRepository extends ServiceEntityRepository
             WHERE `r`.`id` = :id';
         $stmt = $conn->prepare($sql);
         $stmt->execute(array(
-            'id' => $roomId,
-            'os' => OccupancyController::STATUS_IN,
+            'id' => $roomId
         ));
         $rst = $stmt->fetchAll();
         if (count($rst) === 0) {

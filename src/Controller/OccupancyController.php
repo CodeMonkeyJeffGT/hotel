@@ -53,6 +53,7 @@ class OccupancyController extends Controller
                 'id' => $occupancyRst,
             ));
         } catch (\Exception $e) {
+            throw $e;die;
             if ($e->getCode() === 0) {
                 return $this->error();
             }
