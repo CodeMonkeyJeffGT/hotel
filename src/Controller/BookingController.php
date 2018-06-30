@@ -16,7 +16,7 @@ class BookingController extends Controller
     public const BOOKED = 3001;
     public const CHECKED = 3002;
     public const ROOM_NOT_YOURS = 3003;
-    public const BOOKING_NOT_YOURS = 3004;
+    public const BOOKING_NOT_EXISTS = 3004;
     public const ALREADY_CANCELED = 3005;
     public const ALREADY_DONE = 3006;
 
@@ -28,7 +28,7 @@ class BookingController extends Controller
             static::BOOKED => '此房间已被预订',
             static::CHECKED => '此房间已有其他顾客',
             static::ROOM_NOT_YOURS => '您没有权限操作这个房间',
-            static::BOOKING_NOT_YOURS => '订单不存在',
+            static::BOOKING_NOT_EXISTS => '订单不存在',
             static::ALREADY_CANCELED => '该预订已被取消',
             static::ALREADY_DONE => '已入住，无法取消',
         ));

@@ -52,7 +52,6 @@ class BookingRepository extends ServiceEntityRepository
         }
         foreach ($rst as $line) {
             if ($line['os'] === 1) {
-                // if (strtotime($line['checkDate']) + $line['checkDays'] * 86400 <  )
                 throw new \Exception('', BookingController::CHECKED);
             }
             if ($line['bs'] === 1) {

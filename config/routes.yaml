@@ -1,22 +1,21 @@
-page-admin-index:
-   path: /admin/index
-   controller: App\Controller\Page\AdminController::index
-page-admin-in:
-   path: /admin/in
-   controller: App\Controller\Page\AdminController::in
-page-admin-out:
-   path: /admin/out
-   controller: App\Controller\Page\AdminController::out
-page-admin-order:
-   path: /admin/order
-   controller: App\Controller\Page\AdminController::order
-page-admin-room:
-   path: /admin/room
-   controller: App\Controller\Page\AdminController::room
-page-admin-receptionist:
-   path: /admin/receptionist
-   controller: App\Controller\Page\AdminController::receptionist
-page-admin-people:
-   path: /admin/people
-   controller: App\Controller\Page\AdminController::people
-
+page-admin:
+    path: /admin/
+    controller: App\Controller\Page\IndexController::admin
+page-front:
+    path: /front/
+    controller: App\Controller\Page\IndexController::front
+page-front-out:
+    path: /front-out/
+    controller: App\Controller\Page\IndexController::frontOut
+page-user:
+    path: /
+    controller: App\Controller\Page\IndexController::user
+page-user-mine:
+    path: /user/mine
+    controller: App\Controller\Page\IndexController::userMine
+page-signin:
+    path: /signin
+    controller: App\Controller\Page\IndexController::signin
+page-register:
+    path: /reg
+    controller: App\Controller\Page\IndexController::register

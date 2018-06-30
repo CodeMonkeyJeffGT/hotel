@@ -11,6 +11,26 @@ class OccupancyController extends Controller
     public const STATUS_IN = 1;
     public const STATUS_OUT = 2;
 
+    public const ROOM_NOT_EXISTS = 3000;
+    public const BOOKED = 3001;
+    public const CHECKED = 3002;
+    public const ROOM_NOT_YOURS = 3003;
+    public const ORDER_NOT_EXISTS = 3004;
+    public const ALREADY_OUT = 3005;
+
+    public function __constuct()
+    {
+        parent::__construct();
+        $this->setErrMsg(array(
+            static::ROOM_NOT_EXISTS => '房间不存在',
+            static::BOOKED => '此房间已被预订',
+            static::CHECKED => '此房间已有其他顾客',
+            static::ROOM_NOT_YOURS => '您没有权限操作这个房间',
+            static::ORDER_NOT_EXISTS => '订单不存在',
+            static::ALREADY_OUT => '已退房，无法重复退房',
+        ));
+    }
+
     /**
      * 开房登记
      * 
@@ -61,6 +81,22 @@ class OccupancyController extends Controller
             }
             return $this->error($e->getCode());
         }
+    }
+
+    public function showIn()
+    {
+        if (($permitRst = $this->checkPermit(static::PER_RECEPTIONIST)) !== true) {
+            return $permitRst;
+        }
+        
+    }
+
+    public function showOut()
+    {
+        if (($permitRst = $this->checkPermit(static::PER_RECEPTIONIST)) !== true) {
+            return $permitRst;
+        }
+
     }
 
     /**

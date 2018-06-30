@@ -1,0 +1,59 @@
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <link rel="icon" href="/favicon.png">
+        <title>宾馆管理系统</title>
+        <link href="/package/Admin/bootstrap.min.css" rel="stylesheet">
+        <link href="/package/Admin/dashboard.css" rel="stylesheet">
+    </head>
+    <body>
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">宾馆管理系统</a>
+                </div>
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="/signout">安全退出</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-3 col-md-2 sidebar">
+                    <ul class="nav nav-sidebar">
+                        <li class="active"><a href="#">统计信息</a></li>
+                    </ul>
+                    <ul class="nav nav-sidebar">
+                        <li><a href="/front/">前台操作</a></li>
+                    </ul>
+                    <ul class="nav nav-sidebar">
+                        <li><a href="/">用户操作</a></li>
+                    </ul>
+                </div>
+                <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+                    <h1 class="page-header">统计信息</h1>
+                    <div class="row placeholders">
+                        <div class="col-xs-6 col-sm-4 placeholder">
+                            <img src="/img?num=123456" width="80" height="80" class="img-responsive" alt="Generic placeholder thumbnail">
+                            <h4>预订总数</h4>
+                        </div>
+                        <div class="col-xs-6 col-sm-4 placeholder">
+                            <img src="/img?num=9385" width="80" height="80" class="img-responsive" alt="Generic placeholder thumbnail">
+                            <h4>开房登记总数</h4>
+                        </div>
+                        <div class="col-xs-6 col-sm-4 placeholder">
+                            <img src="/img?num=235" width="80" height="80" class="img-responsive" alt="Generic placeholder thumbnail">
+                            <h4>退房结账总数</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="/package/Admin/jquery.min.js"></script>
+        <script src="/package/Admin/bootstrap.min.js"></script>
+        <script>
+        
+        </script>
+</html>

@@ -85,6 +85,18 @@ class UserController extends Controller
         }
     }
 
+
+    /**
+     * 安全退出
+     * 
+     * @Route("/signout", name="signout")
+     */
+    public function signOut()
+    {
+        session_unset();
+        return $this->redirect('/');
+    }
+
     /**
      * 用户列表
      * 
