@@ -1,5 +1,5 @@
-page-admin:
-    path: /admin/
+page-user:
+    path: /
     controller: App\Controller\Page\IndexController::admin
 page-front:
     path: /front/
@@ -7,8 +7,8 @@ page-front:
 page-front-out:
     path: /front-out/
     controller: App\Controller\Page\IndexController::frontOut
-page-user:
-    path: /
+page-admin:
+    path: /user/
     controller: App\Controller\Page\IndexController::user
 page-user-mine:
     path: /user/mine

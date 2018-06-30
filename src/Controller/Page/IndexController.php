@@ -6,61 +6,66 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
+use App\Entity\User;
 
 class IndexController extends Controller
 {
+    public const PER_USER = 0;
+    public const PER_RECEPTIONIST = 1;
+    public const PER_ADMIN = 2;
+
     public function admin(): Response
     {
         $session = new Session();
-        if ($session->has('hotelUser')) {
+        if (($permitRst = $this->checkPermit(static::PER_ADMIN)) === true) {
             $filename = 'admin.html';
             return $this->render($filename);
         } else {
-            return $this->redirect('signin');
+            return $this->front();
         }
     }
 
     public function front(): Response
     {
         $session = new Session();
-        if ($session->has('hotelUser')) {
+        if (($permitRst = $this->checkPermit(static::PER_RECEPTIONIST)) === true) {
             $filename = 'front.html';
             return $this->render($filename);
         } else {
-            return $this->redirect('signin');
+            return $this->user();
         }
     }
 
     public function frontOut(): Response
     {
         $session = new Session();
-        if ($session->has('hotelUser')) {
+        if (($permitRst = $this->checkPermit(static::PER_RECEPTIONIST)) === true) {
             $filename = 'front-out.html';
             return $this->render($filename);
         } else {
-            return $this->redirect('signin');
+            return $this->user();
         }
     }
 
     public function user(): Response
     {
         $session = new Session();
-        if ($session->has('hotelUser')) {
+        if (($permitRst = $this->checkPermit()) === true) {
             $filename = 'user.html';
             return $this->render($filename);
         } else {
-            return $this->redirect('signin');
+            return $this->signin();
         }
     }
 
     public function userMine(): Response
     {
         $session = new Session();
-        if ($session->has('hotelUser')) {
+        if (($permitRst = $this->checkPermit()) === true) {
             $filename = 'user-mine.html';
             return $this->render($filename);
         } else {
-            return $this->redirect('signin');
+            return $this->signin();
         }
     }
 
@@ -72,5 +77,27 @@ class IndexController extends Controller
     public function register(): Response
     {
         return $this->render('register.html');
+    }
+
+    /**
+     * 检查是否登录及是否有权限
+     */
+    private function checkPermit($permit = null)
+    {
+        $session = new Session();
+        $permit = $permit ?? self::PER_USER;
+        if ( ! $session->has('hotelUser')) {
+            return false;
+        }
+        if ($permit === self::PER_USER) {
+            return true;
+        }
+        $id = $session->get('hotelUser');
+        $userDb = $this->getDoctrine()->getRepository(User::class);
+        if ($userDb->checkPermit($id, $permit)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
