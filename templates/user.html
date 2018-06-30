@@ -32,22 +32,9 @@
                     <div class="table-responsive">
                         <table class="table table-striped">
                             <thead>
-                                <tr>
-                                <th>#</th>
-                                <th>Header</th>
-                                <th>Header</th>
-                                <th>Header</th>
-                                <th>Header</th>
-                                </tr>
+                                <tr><th>加载中</th></tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                <td>1,001</td>
-                                <td>Lorem</td>
-                                <td>ipsum</td>
-                                <td>dolor</td>
-                                <td>sit</td>
-                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -56,5 +43,48 @@
         </div>
         <script src="/package/Admin/jquery.min.js"></script>
         <script src="/package/Admin/bootstrap.min.js"></script>
-
+        <script>
+            $(function(){
+                load();
+            });
+            function load()
+            {
+                $.ajax({
+                    'method': 'get',
+                    'content-type': 'json',
+                    'url': '/room/list',
+                    'data': {
+                        'type': 'booking'
+                    },
+                    'success': function(result){
+                        $("thead").html('<tr><th>#</th><th>房间号</th><th>房间推荐居住人数</th><th>操作</th></tr>');
+                        $("tbody").html('');
+                        if (result.code == 0) {
+                            $.each(result.data, function(i, val){
+                                $("tbody").append('<tr><td>' + (i + 1) + '</td><td>' + val.num + '</td>><td>' + val.people + '</td><td><a href="#" onclick="book(' + val.id + ');"> 预订 </a></td></td></tr>')
+                            });
+                
+                        } else {
+                            alert(result.message);
+                        }
+                    }
+                });
+            }
+            function book(id)
+            {
+                $.ajax({
+                    'method': 'post',
+                    'content-type': 'json',
+                    'url': '/book',
+                    'data': {
+                        'roomId': id,
+                        'bookDate': prompt('请输入入住日期（如：2018-06-28）'),
+                        'days': prompt('请输入入住天数（如：3）')
+                    },
+                    'success': function(result) {
+                        load();
+                    }
+                });
+            }
+        </script>
 </html>

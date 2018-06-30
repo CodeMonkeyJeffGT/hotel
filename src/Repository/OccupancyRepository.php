@@ -6,6 +6,7 @@ use App\Entity\Occupancy;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use App\Controller\OccupancyController;
+use App\Controller\BookingController;
 
 /**
  * @method Occupancy|null find($id, $lockMode = null, $lockVersion = null)
@@ -19,12 +20,6 @@ class OccupancyRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Occupancy::class);
     }
-
-    public function showIn()
-    {
-        
-    }
-
     /**
      * 开房登记
      * @param int $userId 用户id
@@ -32,15 +27,15 @@ class OccupancyRepository extends ServiceEntityRepository
      * 
      * @return int 登记id
      */
-    public function checkIn($userId, $roomId): int
+    public function checkIn($userId, $roomId, $guest, $inDate, $days): int
     {
         $conn = $this->getEntityManager()->getConnection();
         $sql = 'SELECT `r`.`id` `id`,
-            `o`.`status` `os`, `o`.`bookDate` `bookDate`, `o`.`days` `bookDays`,
+            `o`.`status` `os`, `o`.`in_date` `check_date`, `o`.`days` `bookDays`
             FROM `room` `r`
             LEFT JOIN `occupancy` `o` ON `o`.`r_id` = `r`.`id`
             WHERE `r`.`id` = :id
-            AND `o`.`status` = :os';
+            AND (`o`.`status` IS NULL OR `o`.`status` = :os)';
         $stmt = $conn->prepare($sql);
         $stmt->execute(array(
             'id' => $roomId,
@@ -48,20 +43,32 @@ class OccupancyRepository extends ServiceEntityRepository
         ));
         $rst = $stmt->fetchAll();
         if (count($rst) === 0) {
-            throw new \Exception('', CooupancyController::ROOM_NOT_EXISTS);
+            throw new \Exception('', OccupancyController::ROOM_NOT_EXISTS);
         }
         foreach ($rst as $line) {
             if ($line['os'] === 1) {
-                throw new \Exception('', CooupancyController::CHECKED);
+                throw new \Exception('', OccupancyController::CHECKED);
             }
         }
         $occupancy = new Occupancy();
-        $occupancy->setUId($userId);
+        $occupancy->setGuest($guest);
         $occupancy->setRId($roomId);
-        $occupancy->setStatus(CooupancyController::STATUS_IN);
+        $occupancy->setStatus(OccupancyController::STATUS_IN);
+        $occupancy->setInDate(new \DateTime(date('Y-m-d', strtotime($inDate))));
+        $occupancy->setDays((int)$days);
+        $occupancy->setOutTime(new \DateTime('1971-01-01'));
+        $occupancy->setCreated(new \DateTime('now'));
         $entityManager = $this->getEntityManager();
         $entityManager->persist($occupancy);
         $entityManager->flush();
+        $sql = 'UPDATE `booking`
+            SET `status` = ' . BookingController::STATUS_DONE . '
+            WHERE `r_id` = :id
+        ';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(array(
+            'id' => $roomId,
+        ));
         return $occupancy->getId();
     }
 
@@ -72,7 +79,7 @@ class OccupancyRepository extends ServiceEntityRepository
      * 
      * @return int 登记id
      */
-    public function checkOut($userId, $occupancyId): int
+    public function checkOut($occupancyId): int
     {
         $occupancy = $this->createQueryBuilder('o')
             ->andWhere('o.id = :id')
@@ -80,16 +87,14 @@ class OccupancyRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
         if (is_null($occupancy)) {
-            throw new \Exception('', BookingController::ORDER_NOT_EXISTS);
+            throw new \Exception('', OccupancyController::ORDER_NOT_EXISTS);
         }
-        if ($occupancy->getUId() !== (int)$userId) {
-            throw new \Exception('', BookingController::ROOM_NOT_YOURS);
+        switch ($occupancy->getStatus()) {
+            case OccupancyController::STATUS_OUT:
+                throw new \Exception('', OccupancyController::ALREADY_OUT);
         }
-        switch ($bookint->getStatus()) {
-            case BookingController::STATUS_OUT:
-                throw new \Exception('', BookingController::ALREADY_OUT);
-        }
-        $occupancy->setStatus(BookingController::STATUS_CANCELED);
+        $occupancy->setStatus(OccupancyController::STATUS_OUT);
+        $occupancy->setOutTime(new \DateTime('now'));
         $entityManager = $this->getEntityManager();
         $entityManager->persist($occupancy);
         $entityManager->flush();

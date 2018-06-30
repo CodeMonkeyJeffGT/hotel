@@ -63,6 +63,18 @@ class Booking
         return $this;
     }
 
+    public function getUId(): ?int
+    {
+        return $this->u_id;
+    }
+
+    public function setUId(int $u_id): self
+    {
+        $this->u_id = $u_id;
+
+        return $this;
+    }
+
     public function getGuest(): ?string
     {
         return $this->guest;
@@ -75,14 +87,14 @@ class Booking
         return $this;
     }
 
-    public function getOrderDate(): ?\DateTimeInterface
+    public function getBookDate(): ?\DateTimeInterface
     {
-        return $this->order_date;
+        return $this->book_date;
     }
 
-    public function setOrderDate(\DateTimeInterface $order_date): self
+    public function setBookDate(\DateTimeInterface $book_date): self
     {
-        $this->order_date = $order_date;
+        $this->book_date = $book_date;
 
         return $this;
     }

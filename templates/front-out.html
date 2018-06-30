@@ -33,31 +33,60 @@
                     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
                     <h2 class="sub-header">房间列表</h2>
                     <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                <th>#</th>
-                                <th>Header</th>
-                                <th>Header</th>
-                                <th>Header</th>
-                                <th>Header</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                <td>1,001</td>
-                                <td>Lorem</td>
-                                <td>ipsum</td>
-                                <td>dolor</td>
-                                <td>sit</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr><th>加载中</th></tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
                     </div>
                 </div>
             </div>
         </div>
         <script src="/package/Admin/jquery.min.js"></script>
         <script src="/package/Admin/bootstrap.min.js"></script>
-
+        <script>
+            $(function(){
+                load();
+            });
+            function load()
+            {
+                $.ajax({
+                    'method': 'get',
+                    'content-type': 'json',
+                    'url': '/room/list',
+                    'data': {
+                        'type': 'out'
+                    },
+                    'success': function(result){
+                        $("thead").html('<tr><th>#</th><th>房间号</th><th>房间推荐居住人数</th><th>居住人</th><th>开房日期</th><th>居住天数</th><th>操作</th></tr>');
+                        $("tbody").html('');
+                        if (result.code == 0) {
+                            $.each(result.data, function(i, val){
+                                $("tbody").append('<tr><td>' + (i + 1) + '</td><td>' + val.num + '</td><td>' + val.people + '</td><td>' + val.guest + '</td><td>' + val.inDate.slice(0, 10) + '</td><td>' + val.days + '</td><td><a href="#" onclick="checkOut(' + val.id + ');"> 退房 </a></td></td></tr>')
+                            });
+                
+                        } else {
+                            alert(result.message);
+                        }
+                    }
+                });
+            }
+            function checkOut(id)
+            {
+                $.ajax({
+                    'method': 'post',
+                    'content-type': 'json',
+                    'url': '/check/out',
+                    'data': {
+                        'occupancyId': id,
+                    },
+                    'success': function(result) {
+                        load();
+                    }
+                });
+            }
+        </script>
+    </body>
 </html>

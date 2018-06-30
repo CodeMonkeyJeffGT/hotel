@@ -32,14 +32,14 @@ class BookingRepository extends ServiceEntityRepository
     {
         $conn = $this->getEntityManager()->getConnection();
         $sql = 'SELECT `r`.`id` `id`,
-            `o`.`status` `os`, `o`.`bookDate` `bookDate`, `o`.`days` `bookDays`,
-            `b`.`status` `bs`, `b`.`in_date` `checkDate`, `b`.`days` `checkDays`
+            `o`.`status` `os`, `o`.`in_date` `check_date`, `o`.`days` `bookDays`,
+            `b`.`status` `bs`, `b`.`book_date` `book_date`, `b`.`days` `checkDays`
             FROM `room` `r`
             LEFT JOIN `occupancy` `o` ON `o`.`r_id` = `r`.`id`
             LEFT JOIN `booking` `b` ON `b`.`r_id` = `r`.`id`
             WHERE `r`.`id` = :id
-            AND `o`.`status` = :os
-            AND `b`.`status` = :bs';
+            AND (`o`.`status` IS NULL OR `o`.`status` = :os)
+            OR (`b`.`status` IS NULL OR `b`.`status` = :bs)';
         $stmt = $conn->prepare($sql);
         $stmt->execute(array(
             'id' => $roomId,
@@ -61,7 +61,10 @@ class BookingRepository extends ServiceEntityRepository
         $booking = new Booking();
         $booking->setUId($userId);
         $booking->setRId($roomId);
+        $booking->setBookDate(new \DateTime(date('Y-m-d', strtotime($bookDate))));
+        $booking->setDays((int)$days);
         $booking->setStatus(BookingController::STATUS_BOOKED);
+        $booking->setCreated(new \DateTime('now'));
         $entityManager = $this->getEntityManager();
         $entityManager->persist($booking);
         $entityManager->flush();
@@ -88,7 +91,7 @@ class BookingRepository extends ServiceEntityRepository
         if ($booking->getUId() !== (int)$userId) {
             throw new \Exception('', BookingController::ROOM_NOT_YOURS);
         }
-        switch ($bookint->getStatus()) {
+        switch ($booking->getStatus()) {
             case BookingController::STATUS_CANCELED:
                 throw new \Exception('', BookingController::ALREADY_CANCELED);
             case BookingController::STATUS_DONE:
@@ -108,7 +111,7 @@ class BookingRepository extends ServiceEntityRepository
      */
     public function countBook(): int
     {
-        return count($this->findAll());
+        return count($this->findAll()) - count($this->findBy(array('status' => '2')));
     }
 
     /**

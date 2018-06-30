@@ -80,14 +80,14 @@ class Occupancy
         return $this;
     }
 
-    public function getOrderDate(): ?\DateTimeInterface
+    public function getInDate(): ?\DateTimeInterface
     {
-        return $this->order_date;
+        return $this->in_date;
     }
 
-    public function setOrderDate(\DateTimeInterface $order_date): self
+    public function setInDate(\DateTimeInterface $in_date): self
     {
-        $this->order_date = $order_date;
+        $this->in_date = $in_date;
 
         return $this;
     }

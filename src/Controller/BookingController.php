@@ -69,7 +69,7 @@ class BookingController extends Controller
     /**
      * 取消预订
      * 
-     * @Route("/unBook", name="unBook")
+     * @Route("/unbook", name="unbook")
      */
     public function unBook(): JsonResponse
     {

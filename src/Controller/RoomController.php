@@ -16,7 +16,9 @@ class RoomController extends Controller
     public function list(): JsonResponse
     {
         $roomDb = $this->getDoctrine()->getRepository(Room::class);
-        $roomRst = $roomDb->list();
+        $type = $this->request->query->get('type', 'all');
+        $userId = $this->session->get('hotelUser');
+        $roomRst = $roomDb->list($type, $userId);
         return $this->success($roomRst);
     }
 }

@@ -43,9 +43,12 @@ class OccupancyController extends Controller
         }
         $userId = $this->session->get('hotelUser');
         $roomId = $this->request->request->get('roomId');
+        $guest = $this->request->request->get('guest');
+        $inDate = $this->request->request->get('inDate');
+        $days = $this->request->request->get('days');
         $occupancyDb = $this->getDoctrine()->getRepository(Occupancy::class);
         try {
-            $occupancyRst = $occupancyDb->checkIn($userId, $roomId);
+            $occupancyRst = $occupancyDb->checkIn($userId, $roomId, $guest, $inDate, $days);
             return $this->success(array(
                 'id' => $occupancyRst,
             ));
@@ -68,14 +71,15 @@ class OccupancyController extends Controller
             return $permitRst;
         }
         $userId = $this->session->get('hotelUser');
-        $roomId = $this->request->request->get('roomId');
+        $occupancyId = $this->request->request->get('occupancyId');
         $occupancyDb = $this->getDoctrine()->getRepository(Occupancy::class);
         try {
-            $occupancyRst = $occupancyDb->checkOut($userId, $roomId);
+            $occupancyRst = $occupancyDb->checkOut($occupancyId);
             return $this->success(array(
                 'id' => $occupancyRst,
             ));
         } catch (\Exception $e) {
+            throw $e;die;
             if ($e->getCode() === 0) {
                 return $this->error();
             }

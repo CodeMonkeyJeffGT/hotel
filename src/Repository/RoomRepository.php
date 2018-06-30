@@ -23,9 +23,63 @@ class RoomRepository extends ServiceEntityRepository
      * 房间列表
      * @return array 房间列表
      */
-    public function list(): array
+    public function list($type, $userId): array
     {
-        return $this->findBy(array(), array('num' => 'ASC'));
+        $conn = $this->getEntityManager()->getConnection();
+        switch ($type) {
+            case 'all':
+                //no break;
+            default:
+                return $this->findAll();
+            case 'booking': 
+                $sql = 'SELECT `r`.`num`, `r`.`people`, `r`.`id`
+                    FROM `room` `r`
+                    WHERE `r`.`id` NOT IN (
+                        SELECT `rt`.`id` `id`
+                        FROM `room` `rt`
+                        LEFT JOIN `occupancy` `o` ON `o`.`r_id` = `rt`.`id`
+                        LEFT JOIN `booking` `b` ON `b`.`r_id` = `rt`.`id`
+                        WHERE (`o`.`status` IS NOT NULL AND `o`.`status` = 1)
+                        OR (`b`.`status` IS NOT NULL AND `b`.`status` = 1)
+                    )
+                ';
+                $params = array();
+                break;
+            case 'order':
+                $sql = 'SELECT `r`.`num`, `r`.`people`, `r`.`id`
+                    FROM `room` `r`
+                    WHERE `r`.`id` NOT IN (
+                        SELECT `rt`.`id` `id`
+                        FROM `room` `rt`
+                        LEFT JOIN `occupancy` `o` ON `o`.`r_id` = `rt`.`id`
+                        WHERE (`o`.`status` IS NOT NULL AND `o`.`status` = 1)
+                    )
+                ';
+                $params = array();
+                break;
+            case 'out':
+                $sql = 'SELECT `r`.`num`, `r`.`people`, `o`.`id`, `o`.`guest`, `o`.`in_date` `inDate`, `o`.`days`
+                    FROM `room` `r`
+                    LEFT JOIN `occupancy` `o` ON `o`.`r_id` = `r`.`id`
+                    WHERE (`o`.`status` IS NOT NULL AND `o`.`status` = 1)
+                ';
+                $params = array();
+                break;
+            case 'mine':
+                $sql = 'SELECT `b`.`id`, `r`.`num`, `r`.`people`, `b`.`status`, `b`.`book_date`, `b`.`days`
+                    FROM `room` `r`
+                    LEFT JOIN `booking` `b` ON `r`.`id` = `b`.`r_id`
+                    WHERE `u_id` = :id
+                    ORDER BY `b`.`created` DESC
+                ';
+                $params = array(
+                    'id' => $userId,
+                );
+                break;
+        }
+        $stmt = $conn->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll();
     }
 
 //    /**
