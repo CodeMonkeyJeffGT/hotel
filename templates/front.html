@@ -60,13 +60,12 @@
                         'type': 'order'
                     },
                     'success': function(result){
-                        $("thead").html('<tr><th>#</th><th>房间号</th><th>房间推荐居住人数</th><th>操作</th></tr>');
+                        $("thead").html('<tr><th>#</th><th>房间号</th><th>房间推荐居住人数</th><th>预订人</th><th>预订住房日期</th><th>预订住房天数</th><th>操作</th></tr>');
                         $("tbody").html('');
                         if (result.code == 0) {
                             $.each(result.data, function(i, val){
-                                $("tbody").append('<tr><td>' + (i + 1) + '</td><td>' + val.num + '</td>><td>' + val.people + '</td><td><a href="#" onclick="checkIn(' + val.id + ');"> 登记 </a></td></td></tr>')
+                                $("tbody").append('<tr><td>' + (i + 1) + '</td><td>' + val.num + '</td><td>' + val.people + '</td><td>' + (val.nickname == null ? '' : val.nickname) + '</td><td>' + (val.book_date == null ? '' : val.book_date) + '</td><td>' + (val.days == null ? '' : val.days) + '</td><td><a href="#" onclick="checkIn(' + val.id + ');"> 登记 </a></td></td></tr>')
                             });
-                
                         } else {
                             alert(result.message);
                         }

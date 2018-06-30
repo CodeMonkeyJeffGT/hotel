@@ -46,14 +46,45 @@ class RoomRepository extends ServiceEntityRepository
                 $params = array();
                 break;
             case 'order':
-                $sql = 'SELECT `r`.`num`, `r`.`people`, `r`.`id`
-                    FROM `room` `r`
-                    WHERE `r`.`id` NOT IN (
-                        SELECT `rt`.`id` `id`
-                        FROM `room` `rt`
-                        LEFT JOIN `occupancy` `o` ON `o`.`r_id` = `rt`.`id`
+                $sql = 'SELECT `r1`.`num`, `r1`.`people`, `r1`.`id`, `u`.`nickname`, `b`.`book_date`, `b`.`days`
+                    FROM `room` `r1`
+                    LEFT JOIN `booking` `b` ON `b`.`r_id` = `r1`.`id`
+                    LEFT JOIN `user` `u` ON `b`.`u_id` = `u`.`id`
+                    WHERE `r1`.`id` NOT IN (
+                        SELECT `rt1`.`id` `id`
+                        FROM `room` `rt1`
+                        LEFT JOIN `occupancy` `o` ON `o`.`r_id` = `rt1`.`id`
                         WHERE (`o`.`status` IS NOT NULL AND `o`.`status` = 1)
                     )
+                    AND `b`.`status` = 1
+                    OR `b`.`status` IS NULL
+                    UNION
+                    SELECT `r2`.`num`, `r2`.`people`, `r2`.`id`, null, null, null
+                    FROM `room` `r2`
+                    LEFT JOIN `booking` `b` ON `b`.`r_id` = `r2`.`id`
+                    LEFT JOIN `user` `u` ON `b`.`u_id` = `u`.`id`
+                    WHERE `r2`.`id` NOT IN (
+                        SELECT `rt2`.`id` `id`
+                        FROM `room` `rt2`
+                        LEFT JOIN `occupancy` `o` ON `o`.`r_id` = `rt2`.`id`
+                        WHERE (`o`.`status` IS NOT NULL AND `o`.`status` = 1)
+                    )
+                    AND `b`.`status` <> 1
+                    AND `r2`.`id` NOT IN (
+                        SELECT `rt3`.`id`
+                        FROM `room` `rt3`
+                        LEFT JOIN `booking` `b` ON `b`.`r_id` = `rt3`.`id`
+                        LEFT JOIN `user` `u` ON `b`.`u_id` = `u`.`id`
+                        WHERE `rt3`.`id` NOT IN (
+                            SELECT `rtt`.`id` `id`
+                            FROM `room` `rtt`
+                            LEFT JOIN `occupancy` `o` ON `o`.`r_id` = `rtt`.`id`
+                            WHERE (`o`.`status` IS NOT NULL AND `o`.`status` = 1)
+                        )
+                        AND `b`.`status` = 1
+                        OR `b`.`status` IS NULL
+                    )
+                    ORDER BY `num`
                 ';
                 $params = array();
                 break;
