@@ -44,7 +44,7 @@ class OccupancyRepository extends ServiceEntityRepository
             throw new \Exception('', OccupancyController::ROOM_NOT_EXISTS);
         }
         foreach ($rst as $line) {
-            if ($line['os'] === 1) {
+            if ($line['os'] == 1) {
                 throw new \Exception('', OccupancyController::CHECKED);
             }
         }

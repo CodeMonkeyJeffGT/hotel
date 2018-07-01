@@ -14,6 +14,11 @@ class IndexController extends Controller
     public const PER_RECEPTIONIST = 1;
     public const PER_ADMIN = 2;
 
+    public function center(): Response
+    {
+        return $this->render('center.html');
+    }
+
     public function admin(): Response
     {
         $session = new Session();
