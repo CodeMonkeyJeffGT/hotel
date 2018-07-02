@@ -38,6 +38,7 @@ class ScenicController extends Controller
         date_default_timezone_set('PRC');
         $now = date('Y-m-d', time());
         $total = $count * $rst['price'];
+        var_dump($_SESSION);
         var_dump(array(
             'userid' => (int)$this->session->get('scenicUser'),
             'count' => (int)$count,

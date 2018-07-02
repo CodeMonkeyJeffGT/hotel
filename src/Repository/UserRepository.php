@@ -84,10 +84,6 @@ class UserRepository extends ServiceEntityRepository
         $entityManager = $this->getEntityManager();
         $entityManager->persist($user);
         $entityManager->flush();
-        var_dump(array(
-            'id' => $user->getId(),
-            's_id' => $user->getSId(),
-        ));die;
         return array(
             'id' => $user->getId(),
             's_id' => $user->getSId(),
