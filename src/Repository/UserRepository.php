@@ -74,8 +74,6 @@ class UserRepository extends ServiceEntityRepository
         );
         $rst = $soap->register($param);
         $rst = $soap->login($param);
-        echo '<pre>';
-        var_dump($rst);die;
         $rst = json_decode($rst->return, true);
 
         $user = new User();
