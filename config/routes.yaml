@@ -25,3 +25,6 @@ page-center:
 page-secnic:
     path: /scenic
     controller: App\Controller\Page\IndexController::scenic
+page-secnic-mine:
+    path: /scenic/mine
+    controller: App\Controller\Page\IndexController::scenicMine

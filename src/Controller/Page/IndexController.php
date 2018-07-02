@@ -24,6 +24,17 @@ class IndexController extends Controller
         return $this->render('scenic.html');
     }
 
+    public function scenicMine(): Response
+    {
+        $session = new Session();
+        if (($permitRst = $this->checkPermit()) === true) {
+            $filename = 'scenic-mine.html';
+            return $this->render($filename);
+        } else {
+            return $this->signin();
+        }
+    }
+
     public function admin(): Response
     {
         $session = new Session();
