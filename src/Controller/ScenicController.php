@@ -32,14 +32,13 @@ class ScenicController extends Controller
         $count = $this->request->request->get('count');
         $param =  array('sid' => (int)$sId);
         $rst = $soap->__soapCall('getTicket',array('parameters' => $param));
-        echo '<pre>';
-        var_dump($rst);die;
         $rst = json_decode($rst->return, true);
-        $tid = $rst['tid'];
+        $tid = $rst['id'];
+        $price = $rst['price'];
         date_default_timezone_set('PRC');
         $now = date('Y-m-d', time());
         $total = $count * $rst['price'];
-        $soap->bookTicket($this->session->get('scenicUser'), $count, $tid, $now, $total);
+        $soap->bookTicket((int)$this->session->get('scenicUser'), (int)$count, (int)$tid, $now, (int)$total);
         return $this->return();
     }
 
