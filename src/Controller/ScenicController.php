@@ -38,6 +38,13 @@ class ScenicController extends Controller
         date_default_timezone_set('PRC');
         $now = date('Y-m-d', time());
         $total = $count * $rst['price'];
+        var_dump(array(
+            'userid' => (int)$this->session->get('scenicUser'),
+            'count' => (int)$count,
+            'tid' => (int)$tid,
+            'time' => $now,
+            'totalprice' => (int)$total
+        ));die;
         $soap->bookTicket(array(
             'userid' => (int)$this->session->get('scenicUser'),
             'count' => (int)$count,
