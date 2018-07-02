@@ -64,7 +64,7 @@
                         $("tbody").html('');
                         if (result.code == 0) {
                             $.each(result.data, function(i, val){
-                                $("tbody").append('<tr><td>' + (i + 1) + '</td><td><img src="http://47.93.39.7:8080/SOA/' + val.picture + '"/></td>><td>' + val.name + '</td><td>' + val.info + '</td><td>' + val.description + '</td><td><a href="#" onclick="book(' + val.id + ');"> 预订 </a></td></td></tr>')
+                                $("tbody").append('<tr><td>' + (i + 1) + '</td><td><img style="width: 100px;" src="http://47.93.39.7:8080/SOA/' + val.picture + '"/></td>><td>' + val.name + '</td><td>' + val.info + '</td><td>' + val.description + '</td><td><a href="#" onclick="book(' + val.id + ');"> 预订 </a></td></td></tr>')
                             });
                 
                         } else {
