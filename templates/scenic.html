@@ -47,47 +47,47 @@
         <script src="/package/Admin/jquery.min.js"></script>
         <script src="/package/Admin/bootstrap.min.js"></script>
         <script>
-                $(function(){
-                    load();
+            $(function(){
+                load();
+            });
+            function load()
+            {
+                $.ajax({
+                    'method': 'get',
+                    'content-type': 'json',
+                    'url': '/scenic/list',
+                    'data': {
+                        'type': 'booking'
+                    },
+                    'success': function(result){
+                        $("thead").html('<tr><th>#</th><th>图片</th><th>名称</th><th>简介</th><th>描述</th><th>操作</th></tr>');
+                        $("tbody").html('');
+                        if (result.code == 0) {
+                            $.each(result.data, function(i, val){
+                                $("tbody").append('<tr><td>' + (i + 1) + '</td><td><img src="http://47.93.39.7:8080/SOA/' + val.picture + '"/></td>><td>' + val.name + '</td><td>' + val.info + '</td><td>' + val.description + '</td><td><a href="#" onclick="book(' + val.id + ');"> 预订 </a></td></td></tr>')
+                            });
+                
+                        } else {
+                            alert(result.message);
+                        }
+                    }
                 });
-                function load()
-                {
-                    $.ajax({
-                        'method': 'get',
-                        'content-type': 'json',
-                        'url': '/scenic/list',
-                        'data': {
-                            'type': 'booking'
-                        },
-                        'success': function(result){
-                            $("thead").html('<tr><th>#</th><th>房间号</th><th>房间推荐居住人数</th><th>操作</th></tr>');
-                            $("tbody").html('');
-                            if (result.code == 0) {
-                                $.each(result.data, function(i, val){
-                                    $("tbody").append('<tr><td>' + (i + 1) + '</td><td>' + val.num + '</td>><td>' + val.people + '</td><td><a href="#" onclick="book(' + val.id + ');"> 预订 </a></td></td></tr>')
-                                });
-                    
-                            } else {
-                                alert(result.message);
-                            }
-                        }
-                    });
-                }
-                function book(id)
-                {
-                    $.ajax({
-                        'method': 'post',
-                        'content-type': 'json',
-                        'url': '/book',
-                        'data': {
-                            'roomId': id,
-                            'bookDate': prompt('请输入入住日期（如：2018-06-28）'),
-                            'days': prompt('请输入入住天数（如：3）')
-                        },
-                        'success': function(result) {
-                            load();
-                        }
-                    });
-                }
+            }
+            function book(id)
+            {
+                $.ajax({
+                    'method': 'post',
+                    'content-type': 'json',
+                    'url': '/book',
+                    'data': {
+                        'roomId': id,
+                        'bookDate': prompt('请输入入住日期（如：2018-06-28）'),
+                        'days': prompt('请输入入住天数（如：3）')
+                    },
+                    'success': function(result) {
+                        load();
+                    }
+                });
+            }
         </script>
 </html>

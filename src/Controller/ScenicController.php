@@ -27,7 +27,20 @@ class ScenicController extends Controller
      */
     public function book(): JsonResponse
     {
-        
+        $soap = new \SoapClient('http://47.93.39.7:8080/SOA/webservice/WebserviceTest?wsdl');
+        $sId = $this->request->request->get('sId');
+        $count = $this->request->request->get('count');
+        $sId = $this->request->request->get('sId');
+        $rst = $soap->getById($sId);
+        echo '<pre>';
+        var_dump($rst);die;
+        $rst = json_decode($rst->return, true);
+        $tid = $rst['tid'];
+        date_default_timezone_set('PRC');
+        $now = date('Y-m-d', time());
+        $total = $count * $rst['price'];
+        $soap->bookTicket($this->session->get('scenicUser'), $count, $tid, $now, $total);
+        return $this->return();
     }
 
     /**
