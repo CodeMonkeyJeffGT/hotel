@@ -96,12 +96,12 @@ class User
 
     public function getSId(): ?int
     {
-        return $this->sId;
+        return $this->s_id;
     }
 
-    public function setSId(int $sId): self
+    public function setSId(int $s_id): self
     {
-        $this->sId = $sId;
+        $this->s_id = $s_id;
 
         return $this;
     }
