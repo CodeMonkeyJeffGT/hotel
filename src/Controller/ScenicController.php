@@ -33,7 +33,7 @@ class ScenicController extends Controller
     /**
      * 订票列表
      * 
-     * @Route("/scenic/mine", name="scenic-mine")
+     * @Route("/scenic/mine/list", name="scenic-mine")
      */
     public function mine(): JsonResponse
     {
