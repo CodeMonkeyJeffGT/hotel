@@ -25,9 +25,9 @@ class UserRepository extends ServiceEntityRepository
      * @param string $account 账号
      * @param string $password 密码
      * 
-     * @return int 用户id
+     * @return array 用户id
      */
-    public function sign($account, $password): int
+    public function sign($account, $password): array
     {
         $user = $this->createQueryBuilder('u')
             ->andWhere('u.account = :account')
@@ -52,9 +52,9 @@ class UserRepository extends ServiceEntityRepository
      * @param string $password 密码
      * @param string $nickname 昵称
      * 
-     * @return int 用户id
+     * @return array 用户id
      */
-    public function register($account, $password, $nickname): int
+    public function register($account, $password, $nickname): array
     {
         $user = $this->createQueryBuilder('u')
             ->andWhere('u.account = :account')
