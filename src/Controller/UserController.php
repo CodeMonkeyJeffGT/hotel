@@ -80,6 +80,7 @@ class UserController extends Controller
                 'id' => $userRst,
             ));
         } catch (\Exception $e) {
+            throw $e;die;
             if ($e->getCode() === 0) {
                 return $this->error();
             }
