@@ -30,7 +30,8 @@ class ScenicController extends Controller
         $soap = new \SoapClient('http://47.93.39.7:8080/SOA/webservice/WebserviceTest?wsdl');
         $sId = $this->request->request->get('sId');
         $count = $this->request->request->get('count');
-        $rst = $soap->getTicket(array('sid' => $sId));
+        $param =  array('sid' => $sId);
+        $arr = $soap->__soapCall('getTicket',array('parameters' => $param));
         echo '<pre>';
         var_dump($rst);die;
         $rst = json_decode($rst->return, true);
