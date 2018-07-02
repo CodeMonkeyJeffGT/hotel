@@ -69,7 +69,7 @@ class UserRepository extends ServiceEntityRepository
         $account = $account . mt_rand(0, 10000);
         $password = $password;
         $param = array(
-            'account' => $accoumt,
+            'account' => $account,
             'password' => $password,
         );
         $rst = $soap->register($param);
