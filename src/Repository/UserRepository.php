@@ -66,10 +66,10 @@ class UserRepository extends ServiceEntityRepository
         }
 
         $soap = new \SoapClient('http://47.93.39.7:8080/SOA/webservice/WebserviceTest?wsdl');
-        $account = $account . mt_rand(0, 10000);
+        $username = $account . mt_rand(0, 10000);
         $password = $password;
         $param = array(
-            'username' => $account,
+            'username' => $username,
             'password' => $password,
         );
         $rst = $soap->register($param);
