@@ -28,10 +28,10 @@ class ScenicController extends Controller
     public function book(): JsonResponse
     {
         $soap = new \SoapClient('http://47.93.39.7:8080/SOA/webservice/WebserviceTest?wsdl');
-        $sId = $this->request->request->get('sId');
+        $sId = $this->request->request->get('sid');
         $count = $this->request->request->get('count');
-        $param =  array('sid' => 1);
-        $arr = $soap->__soapCall('getTicket',array('parameters' => $param));
+        $param =  array('sid' => (int)$sId);
+        $rst = $soap->__soapCall('getTicket',array('parameters' => $param));
         echo '<pre>';
         var_dump($rst);die;
         $rst = json_decode($rst->return, true);
