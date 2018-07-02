@@ -78,11 +78,10 @@
                 $.ajax({
                     'method': 'post',
                     'content-type': 'json',
-                    'url': '/book',
+                    'url': '/scenic/book',
                     'data': {
-                        'roomId': id,
-                        'bookDate': prompt('请输入入住日期（如：2018-06-28）'),
-                        'days': prompt('请输入入住天数（如：3）')
+                        'sid': id,
+                        'count': prompt('请输入订票数量（如：3）')
                     },
                     'success': function(result) {
                         load();
