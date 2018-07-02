@@ -17,7 +17,7 @@ class ScenicController extends Controller
     {
         $soap = new \SoapClient('http://47.93.39.7:8080/SOA/webservice/WebserviceTest?wsdl');
         $rst = $soap->getAllScenery();
-        $this->return($rst);
+        return $this->return($rst);
     }
 
     /**
