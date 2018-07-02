@@ -4,7 +4,6 @@ namespace App\Controller;
 use App\Controller\BaseController as Controller;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use App\Entity\Booking;
 
 class ScenicController extends Controller
 {
@@ -17,6 +16,7 @@ class ScenicController extends Controller
     {
         $soap = new \SoapClient('http://47.93.39.7:8080/SOA/webservice/WebserviceTest?wsdl');
         $rst = $soap->getAllScenery();
+        $rst = json_decode($rst->return, true);
         return $this->return($rst);
     }
 
@@ -37,5 +37,9 @@ class ScenicController extends Controller
      */
     public function mine(): JsonResponse
     {
+        $soap = new \SoapClient('http://47.93.39.7:8080/SOA/webservice/WebserviceTest?wsdl');
+        $rst = $soap->getAllBookTicket($this->session->get('scenicUser'));
+        $rst = json_decode($rst->return, true);
+        return $this->return($rst);
     }
 }

@@ -42,9 +42,10 @@ class UserController extends Controller
         $userDb = $this->getDoctrine()->getRepository(User::class);
         try {
             $userRst = $userDb->sign($account, $password);
-            $this->session->set('hotelUser', $userRst);
+            $this->session->set('hotelUser', $userRst['id']);
+            $this->session->set('scenicUser', $userRst['s_id']);
             return $this->success(array(
-                'id' => $userRst,
+                'id' => $userRst['id'],
             ));
         } catch (\Exception $e) {
             if ($e->getCode() === 0) {
@@ -73,7 +74,8 @@ class UserController extends Controller
         $userDb = $this->getDoctrine()->getRepository(User::class);
         try {
             $userRst = $userDb->register($account, $password, $nickname);
-            $this->session->set('hotelUser', $userRst);
+            $this->session->set('hotelUser', $userRst['id']);
+            $this->session->set('scenicUser', $userRst['s_id']);
             return $this->success(array(
                 'id' => $userRst,
             ));

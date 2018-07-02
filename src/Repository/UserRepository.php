@@ -40,7 +40,10 @@ class UserRepository extends ServiceEntityRepository
         if ($user->getPassword() !== $password) {
             throw new \Exception('密码错误', UserController::PASSWORD_WRONG);
         }
-        return $user->getId();
+        return array(
+            'id' => $user->getId(),
+            's_id' => $user->getSId(),
+        );
     }
 
     /**
@@ -62,15 +65,25 @@ class UserRepository extends ServiceEntityRepository
             throw new \Exception('', UserController::USER_EXISTS);
         }
 
+        $soap = new \SoapClient('http://47.93.39.7:8080/SOA/webservice/WebserviceTest?wsdl');
+        $account = $account . mt_rand(0, 10000);
+        $password = $password;
+        $rst = $soap->register($account, $password);
+        $rst = json_decode($rst->return, true);
+
         $user = new User();
         $user->setAccount($account);
         $user->setPassword($password);
         $user->setNickname($nickname);
+        $user->setSId($rst['id']);
         $user->setRole(UserController::PER_USER);
         $entityManager = $this->getEntityManager();
         $entityManager->persist($user);
         $entityManager->flush();
-        return $user->getId();
+        return array(
+            'id' => $user->getId(),
+            's_id' => $user->getSId(),
+        );
     }
 
     /**
