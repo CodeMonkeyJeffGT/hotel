@@ -60,11 +60,11 @@
                         'type': 'booking'
                     },
                     'success': function(result){
-                        $("thead").html('<tr><th>#</th><th>房间号</th><th>房间推荐居住人数</th></tr>');
+                        $("thead").html('<tr><th>#</th><th>名称</th><th>订票日期</th><th>价格</th></tr>');
                         $("tbody").html('');
                         if (result.code == 0) {
                             $.each(result.data, function(i, val){
-                                $("tbody").append('<tr><td>' + (i + 1) + '</td><td>' + val.num + '</td>><td>' + val.people + '</td></td></tr>')
+                                $("tbody").append('<tr><td>' + (i + 1) + '</td><td>' + val.tname + '</td>><td>' + val.time + '</td><td>' + val.totalprice + '</td></tr>')
                             });
                 
                         } else {
