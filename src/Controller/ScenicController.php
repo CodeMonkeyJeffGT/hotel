@@ -45,6 +45,13 @@ class ScenicController extends Controller
             'time' => $now,
             'totalprice' => (int)$total
         ));
+        var_dump(array(
+            'userid' => (int)$this->session->get('scenicUser'),
+            'count' => (int)$count,
+            'tid' => (int)$tid,
+            'time' => $now,
+            'totalprice' => (int)$total
+        ));die;
         return $this->return();
     }
 
