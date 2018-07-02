@@ -22,3 +22,6 @@ page-register:
 page-center:
     path: /center
     controller: App\Controller\Page\IndexController::center
+page-secnic:
+    path: /scenic
+    controller: App\Controller\Page\IndexController::scenic

@@ -19,6 +19,11 @@ class IndexController extends Controller
         return $this->render('center.html');
     }
 
+    public function scenic(): Response
+    {
+        return $this->render('scenic.html');
+    }
+
     public function admin(): Response
     {
         $session = new Session();

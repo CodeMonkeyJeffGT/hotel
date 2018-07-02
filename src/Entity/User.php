@@ -36,6 +36,11 @@ class User
      */
     private $role;
 
+    /**
+     * @ORM\Column(type="integer", options={"default": 0})
+     */
+    private $s_id;
+
     public function getId()
     {
         return $this->id;
@@ -85,6 +90,18 @@ class User
     public function setRole(int $role): self
     {
         $this->role = $role;
+
+        return $this;
+    }
+
+    public function getSId(): ?int
+    {
+        return $this->sId;
+    }
+
+    public function setSId(int $sId): self
+    {
+        $this->sId = $sId;
 
         return $this;
     }
