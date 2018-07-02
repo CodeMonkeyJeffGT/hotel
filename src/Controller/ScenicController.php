@@ -45,13 +45,6 @@ class ScenicController extends Controller
             'time' => $now,
             'totalprice' => (int)$total
         ));
-        var_dump(array(
-            'userid' => (int)$this->session->get('scenicUser'),
-            'count' => (int)$count,
-            'tid' => (int)$tid,
-            'time' => $now,
-            'totalprice' => (int)$total
-        ));die;
         return $this->return();
     }
 
@@ -63,7 +56,7 @@ class ScenicController extends Controller
     public function mine(): JsonResponse
     {
         $soap = new \SoapClient('http://47.93.39.7:8080/SOA/webservice/WebserviceTest?wsdl');
-        $rst = $soap->getAllBookTicket($this->session->get('scenicUser'));
+        $rst = $soap->getAllBookTicket(array('userid' => $this->session->get('scenicUser')));
         $rst = json_decode($rst->return, true);
         return $this->return($rst);
     }
